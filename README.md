@@ -99,20 +99,4 @@ The project coordinates multiple specialized AI agents to design, develop, and d
 - Achievement tracking  
 - Milestone celebrations  
 
----
-
-## 🧠 Agents
-*(Details about CrewAI agents can be listed here)*
-
----
-
-## 📂 Project Structure
-*(Add folder and file breakdown here)*
-
----
-
-## ⚙️ Installation
-```bash
-git clone <your-repository-url>
-cd fitness-tracker-crew-ai
 
