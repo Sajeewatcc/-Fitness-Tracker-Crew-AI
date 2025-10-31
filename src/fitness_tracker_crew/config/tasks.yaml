@@ -1,0 +1,112 @@
+fitness_domain_task:
+  description: >
+    Provide comprehensive fitness domain expertise for the workout tracker system.
+    Include exercise databases, workout principles, progression models, and safety considerations.
+    Recommend appropriate metrics, exercise categories, and fitness best practices.
+    Here are the requirements: {requirements}
+  expected_output: >
+    A detailed fitness domain specification including:
+    - Exercise database with categories (strength, cardio, flexibility)
+    - Workout structure recommendations
+    - Progress tracking metrics
+    - Safety guidelines and validation rules
+    - Sample workout routines
+  agent: fitness_expert
+  output_file: output/fitness_domain_spec.md
+
+design_task:
+  description: >
+    Take the high level requirements and fitness domain specifications to prepare a detailed technical design.
+    Everything should be in 1 python module, but outline the classes and methods in the module.
+    Incorporate fitness best practices and the domain expertise provided.
+    Here are the requirements: {requirements}
+    IMPORTANT: Only output the design in markdown format, laying out in detail the classes and functions in the module, describing the functionality.
+  expected_output: >
+    A detailed technical design for the engineer, identifying the classes and functions in the module.
+    Include data models for workouts, exercises, progress tracking, and analytics.
+  agent: engineering_lead
+  context:
+    - fitness_domain_task
+  output_file: output/{module_name}_design.md
+
+analytics_design_task:
+  description: >
+    Design the analytics and visualization components for the fitness tracker.
+    Specify metrics, progress calculations, chart types, and insights generation.
+    Work with the fitness domain specifications to create meaningful analytics.
+    Here are the requirements: {requirements}
+  expected_output: >
+    Analytics design specification including:
+    - Key metrics and calculations (1RM, volume, progress rates)
+    - Chart types and visualization requirements
+    - Insights generation algorithms
+    - Progress tracking methodology
+  agent: data_analyst
+  context:
+    - fitness_domain_task
+  output_file: output/analytics_design.md
+
+code_task:
+  description: >
+    Write a python module that implements the design described by the engineering lead and incorporates
+    the fitness domain expertise and analytics design, in order to achieve the requirements.
+    Here are the requirements: {requirements}
+  expected_output: >
+    A python module that implements the design and achieves the requirements.
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid Python code that can be directly saved to a file and executed.
+  agent: backend_engineer
+  context:
+    - design_task
+    - fitness_domain_task
+    - analytics_design_task
+  output_file: output/{module_name}
+
+frontend_task:
+  description: >
+    Write a comprehensive gradio UI in a module app.py that demonstrates the given backend class in {module_name}.
+    Create an intuitive interface for workout logging, progress viewing, analytics, and exercise management.
+    Include tabs for different functionalities and meaningful visualizations.
+    Here are the requirements: {requirements}
+  expected_output: >
+    A complete gradio UI in module app.py that demonstrates all backend features.
+    The file should be ready so that it can be run as-is, in the same directory as the backend module, and it should import the backend class from {module_name}.
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid Python code that can be directly saved to a file and executed.
+  agent: frontend_engineer
+  context:
+    - code_task
+    - analytics_design_task
+  output_file: output/app.py
+
+test_task:
+  description: >
+    Write comprehensive unit tests for the given backend module {module_name} and create a test_{module_name} in the same directory as the backend module.
+    Include tests for fitness-specific functionality, exercise validation, progress calculations, and analytics features.
+  expected_output: >
+    A test_{module_name} module that thoroughly tests the given backend module.
+    IMPORTANT: Output ONLY the raw Python code without any markdown formatting, code block delimiters, or backticks.
+    The output should be valid Python code that can be directly saved to a file and executed.
+  agent: test_engineer
+  context:
+    - code_task
+  output_file: output/test_{module_name}
+
+documentation_task:
+  description: >
+    Create comprehensive documentation for the fitness workout tracker system.
+    Include user guide, API documentation, setup instructions, and usage examples.
+    Document the exercise database, workout logging process, and analytics features.
+  expected_output: >
+    Complete documentation in markdown format covering:
+    - System overview and features
+    - Installation and setup guide
+    - User manual with examples
+    - API reference
+    - Exercise database reference
+    - Troubleshooting guide
+  agent: documentation_specialist
+  context:
+    - code_task
+    - frontend_task
+  output_file: output/README.md

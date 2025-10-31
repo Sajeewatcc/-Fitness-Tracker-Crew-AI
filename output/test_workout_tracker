@@ -1,0 +1,62 @@
+import unittest
+from workout_tracker import Exercise, WorkoutLog, ExerciseLog, FitnessTracker
+
+class TestWorkoutTracker(unittest.TestCase):
+    
+    def setUp(self):
+        self.tracker = FitnessTracker()
+        self.exercises = self.tracker.exercise_db
+
+    def test_exercise_creation(self):
+        exercise = Exercise("Test Exercise", "strength", ["Muscle1"], ["None"], "Test instructions")
+        self.assertIsInstance(exercise, Exercise)
+        self.assertEqual(exercise.name, "Test Exercise")
+
+    def test_workout_logging(self):
+        workout = self.tracker.log_workout("2023-10-01", 60, "Leg day workout")
+        self.assertEqual(workout.date, "2023-10-01")
+        self.assertEqual(workout.duration, 60)
+        self.assertEqual(workout.notes, "Leg day workout")
+
+    def test_add_exercise_to_workout(self):
+        workout = self.tracker.log_workout("2023-10-01", 60, "Leg day workout")
+        squats = ExerciseLog(self.exercises[0], sets=4, reps=8, weight=150, rpe=8)
+        self.tracker.add_exercise_to_workout(workout, squats)
+        self.assertIn(squats, workout.exercises)
+
+    def test_calculate_volume(self):
+        squats = ExerciseLog(self.exercises[0], sets=4, reps=8, weight=150, rpe=8)
+        volume = squats.calculate_volume()
+        self.assertEqual(volume, 4800)
+
+    def test_search_exercises_by_name(self):
+        results = self.tracker.search_exercises(name="Squats")
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].name, "Squats")
+
+    def test_search_exercises_by_category(self):
+        results = self.tracker.search_exercises(category="cardio")
+        self.assertGreater(len(results), 0)
+        self.assertTrue(all(e.category == "cardio" for e in results))
+
+    def test_search_exercises_by_name_and_category(self):
+        results = self.tracker.search_exercises(name="Running", category="cardio")
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].name, "Running")
+
+    def test_add_invalid_exercise_to_workout(self):
+        workout = self.tracker.log_workout("2023-10-01", 60, "Leg day workout")
+        with self.assertRaises(TypeError):
+            self.tracker.add_exercise_to_workout(workout, "Not an ExerciseLog")
+
+    def test_edge_case_empty_workout(self):
+        workout = WorkoutLog("2023-10-01", 30, "Empty workout")
+        self.assertEqual(workout.exercises, [])
+
+    def test_progress_tracking_placeholder(self):
+        # Placeholder test for progress tracking
+        self.tracker.track_progress()  # No specific assertions as body is not implemented yet
+        self.assertTrue(True)  # Ensuring the method can be called without errors
+
+if __name__ == '__main__':
+    unittest.main()
