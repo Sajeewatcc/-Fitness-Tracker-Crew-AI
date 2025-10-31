@@ -54,17 +54,6 @@ A comprehensive AI-powered fitness workout tracking system built with **CrewAI**
 
 ---
 
-## 📋 Table of Contents
-- [Overview](#-overview)
-- [Features](#-features)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Agents](#-agents)
-- [Output](#-output)
-- [Contributing](#-contributing)
-- [License](#-license)
-
 ---
 
 ## 🚀 Overview
