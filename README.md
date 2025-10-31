@@ -43,12 +43,76 @@ This example, unmodified, will run the create a `report.md` file with the output
 
 The fitness_tracker_crew Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
 
-## Support
+# 🏋️‍♂️ Fitness Tracker Crew AI 🤖💪  
+A comprehensive AI-powered fitness workout tracking system built with **CrewAI**, featuring multiple specialized agents working together to create a complete fitness application.
 
-For support, questions, or feedback regarding the FitnessTrackerCrew Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+---
 
-Let's create wonders together with the power and simplicity of crewAI.
+![CrewAI](https://img.shields.io/badge/CrewAI-Project-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-green)
+![Fitness](https://img.shields.io/badge/Fitness-Tracking-orange)
+
+---
+
+## 📋 Table of Contents
+- [Overview](#-overview)
+- [Features](#-features)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Usage](#-usage)
+- [Agents](#-agents)
+- [Output](#-output)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
+
+## 🚀 Overview
+**Fitness Tracker Crew AI** demonstrates the power of multi-agent AI systems using **CrewAI**.  
+The project coordinates multiple specialized AI agents to design, develop, and document a complete fitness workout tracking application from scratch.
+
+---
+
+## ✨ Features
+
+### 🏋️ Exercise Management
+- Pre-loaded exercise database with **50+ exercises**  
+- Categorized exercises (Strength, Cardio, Flexibility)  
+- Custom exercise creation  
+- Exercise search and filtering  
+
+### 📊 Workout Logging
+- Comprehensive workout tracking with **sets, reps, and weights**  
+- Support for different exercise types  
+- **RPE (Rate of Perceived Exertion)** tracking  
+- Workout templates and routines  
+
+### 📈 Advanced Analytics
+- **1RM (One Rep Max)** estimation  
+- Training volume calculations  
+- Progress tracking and visualization  
+- Performance insights and trends  
+
+### 🎯 Goal Tracking
+- Personal goal setting  
+- Progress monitoring  
+- Achievement tracking  
+- Milestone celebrations  
+
+---
+
+## 🧠 Agents
+*(Details about CrewAI agents can be listed here)*
+
+---
+
+## 📂 Project Structure
+*(Add folder and file breakdown here)*
+
+---
+
+## ⚙️ Installation
+```bash
+git clone <your-repository-url>
+cd fitness-tracker-crew-ai
+
