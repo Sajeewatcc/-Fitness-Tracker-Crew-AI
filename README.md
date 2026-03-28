@@ -1,91 +1,140 @@
-# FitnessTrackerCrew Crew
+# Appliance Energy Prediction — Deep Learning Internship Project
 
-Welcome to the FitnessTrackerCrew Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Multivariate time-series forecasting of household appliance energy consumption using the [UCI Appliance Energy Prediction Dataset](https://archive.ics.uci.edu/dataset/374/appliances+energy+prediction).
 
-## Installation
+---
 
-Ensure you have Python >=3.10 <3.14 installed on your system. This project uses [UV](https://docs.astral.sh/uv/) for dependency management and package handling, offering a seamless setup and execution experience.
+## Project Overview
 
-First, if you haven't already, install uv:
+The pipeline trains and compares five models — Ridge Regression, Random Forest, LSTM, GRU, and CNN-LSTM — on 10-minute interval energy data recorded across a Belgian residence from January to May 2016.
 
-```bash
-pip install uv
+**Best result:** GRU — MAE ≈ 13 Wh, R² ≈ 0.71
+
+---
+
+## Project Structure
+
+```
+My_Intern_Project/
+├── data/
+│   ├── raw/                     # Raw dataset (energy_data_set.csv)
+│   └── processed/               # Cleaned and engineered CSVs
+├── models/                      # Saved model files (.h5, .pkl)
+├── notebooks/
+│   └── Run_pipeline.ipynb       # End-to-end pipeline runner
+├── src/
+│   ├── data_preprocessing.py    # Step 1 — Load, clean, split
+│   ├── feature_engineering.py   # Step 2 — Feature creation and scaling
+│   ├── model.py                 # Model architectures and callbacks
+│   ├── train.py                 # Step 3 — Baseline model training (LR, RF)
+│   └── train_dl.py              # Step 4 — DL model training (LSTM, GRU, CNN-LSTM)
+├── Plots and Visualizations/    # All generated plots
+├── reports/
+│   └── report.docx              # Auto-generated Word report
+├── generate_report.py           # Generates the Word report
+└── requirements.txt
 ```
 
-Next, navigate to your project directory and install the dependencies:
+---
 
-(Optional) Lock the dependencies and install them by using the CLI command:
-```bash
-crewai install
-```
-### Customizing
+## Setup
 
-**Add your `OPENAI_API_KEY` into the `.env` file**
-
-- Modify `src/fitness_tracker_crew/config/agents.yaml` to define your agents
-- Modify `src/fitness_tracker_crew/config/tasks.yaml` to define your tasks
-- Modify `src/fitness_tracker_crew/crew.py` to add your own logic, tools and specific args
-- Modify `src/fitness_tracker_crew/main.py` to add custom inputs for your agents and tasks
-
-## Running the Project
-
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
+### 1. Create and activate a virtual environment
 
 ```bash
-$ crewai run
+python -m venv tf_env
+# Windows
+tf_env\Scripts\activate
+# macOS / Linux
+source tf_env/bin/activate
 ```
 
-This command initializes the fitness_tracker_crew Crew, assembling the agents and assigning them tasks as defined in your configuration.
+### 2. Install dependencies
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+```bash
+pip install -r requirements.txt
+```
 
-## Understanding Your Crew
+> **Note:** TensorFlow 2.20 requires Python 3.9–3.12. It is not compatible with Python 3.13+.
 
-The fitness_tracker_crew Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+### 3. Place the dataset
 
-# 🏋️‍♂️ Fitness Tracker Crew AI 🤖💪  
-A comprehensive AI-powered fitness workout tracking system built with **CrewAI**, featuring multiple specialized agents working together to create a complete fitness application.
+Put `energy_data_set.csv` in `data/raw/`:
 
----
-
-![CrewAI](https://img.shields.io/badge/CrewAI-Project-blue)
-![Python](https://img.shields.io/badge/Python-3.8%2B-green)
-![Fitness](https://img.shields.io/badge/Fitness-Tracking-orange)
-
----
+```
+data/raw/energy_data_set.csv
+```
 
 ---
 
-## 🚀 Overview
-**Fitness Tracker Crew AI** demonstrates the power of multi-agent AI systems using **CrewAI**.  
-The project coordinates multiple specialized AI agents to design, develop, and document a complete fitness workout tracking application from scratch.
+## How to Run
+
+### Option A — Jupyter Notebook (recommended)
+
+Open and run all cells in `notebooks/Run_pipeline.ipynb`. Each step runs in order and prints progress to the cell output.
+
+```
+Step 1 → Data Preprocessing
+Step 2 → Feature Engineering
+Step 3 → Baseline Training (LR + RF)
+Step 4 → DL Architecture Review
+Step 5 → DL Training (LSTM, GRU, CNN-LSTM)
+Step 6 → All Models Comparison DataFrame
+```
+
+### Option B — Run each script individually
+
+```bash
+python src/data_preprocessing.py
+python src/feature_engineering.py
+python src/train.py
+python src/train_dl.py
+```
+
+### Generate the Word Report
+
+```bash
+python generate_report.py
+```
+
+Output: `reports/report.docx`
 
 ---
 
-## ✨ Features
+## Models
 
-### 🏋️ Exercise Management
-- Pre-loaded exercise database with **50+ exercises**  
-- Categorized exercises (Strength, Cardio, Flexibility)  
-- Custom exercise creation  
-- Exercise search and filtering  
+| Model             | Type        | Key design                                  |
+|-------------------|-------------|---------------------------------------------|
+| Ridge Regression  | Linear      | L2 regularisation, GridSearchCV tuning      |
+| Random Forest     | Ensemble    | 300 trees, RandomizedSearchCV tuning        |
+| LSTM              | Deep Learning | 2-layer + BatchNorm + gradient clipping   |
+| GRU               | Deep Learning | 2-layer + BatchNorm + gradient clipping   |
+| CNN-LSTM          | Deep Learning | Conv1D feature extractor + LSTM           |
 
-### 📊 Workout Logging
-- Comprehensive workout tracking with **sets, reps, and weights**  
-- Support for different exercise types  
-- **RPE (Rate of Perceived Exertion)** tracking  
-- Workout templates and routines  
+All DL models use:
+- Sequence length: 24 steps (4 hours of history)
+- Optimizer: Adam with `clipnorm=1.0`
+- Callbacks: EarlyStopping (patience=15) + ReduceLROnPlateau
+- Random seed: 42 (fully reproducible)
 
-### 📈 Advanced Analytics
-- **1RM (One Rep Max)** estimation  
-- Training volume calculations  
-- Progress tracking and visualization  
-- Performance insights and trends  
+---
 
-### 🎯 Goal Tracking
-- Personal goal setting  
-- Progress monitoring  
-- Achievement tracking  
-- Milestone celebrations  
+## Results
 
+| Model            | MAE (Wh) | RMSE (Wh) | MAPE (%) | R²   |
+|------------------|----------|-----------|----------|------|
+| Ridge Regression | ~13.6    | ~22.0     | ~17.0    | 0.68 |
+| Random Forest    | ~13.0    | ~20.6     | ~16.0    | 0.71 |
+| LSTM             | ~13.5    | ~21.2     | ~16.8    | 0.70 |
+| **GRU**          | **~13.0**| **~20.6** | **~16.0**| **0.71** |
+| CNN-LSTM         | ~14.1    | ~21.4     | ~17.0    | 0.69 |
 
+---
+
+## Dataset
+
+- **Source:** UCI Machine Learning Repository
+- **Records:** 19,735 rows at 10-minute intervals
+- **Period:** January–May 2016
+- **Target:** `Appliances` — energy consumption in Wh
+- **Features:** 26 environmental sensors (temperature, humidity, lighting, weather)
